@@ -3,14 +3,14 @@ class Terrain {
   FloatList freqs;
   ArrayList<Layer> layers;
 
-  float greyscale[][];
+  float zPos[][];
 
   Terrain(FloatList a, FloatList f) {
     this.amps = a;
     this.freqs = f;
     this.layers = new ArrayList<Layer>();
 
-    this.greyscale = new float[width][height];
+    this.zPos = new float[cols][lines];
 
     for (int i=0; i<this.amps.size(); i++) {
       Layer layer = new Layer(this.amps.get(i), this.freqs.get(i));
@@ -24,32 +24,33 @@ class Terrain {
       layer.update();
     }
 
-    for (int y=0; y<width; y++) {
-      for (int x=0; x<width; x++) {
+    for (int y=0; y<lines; y++) {
+      for (int x=0; x<cols; x++) {
         float sum=0;
         for (Layer layer : this.layers) {
-          sum += layer.greyscale[x][y];
+          sum += layer.zPos[x][y];
         }
-        this.greyscale[x][y] = sum;
+        this.zPos[x][y] = sum;
       }
     }
-    float minscale = persoMin(this.greyscale);
-    float maxscale = persoMax(this.greyscale);
-    for (int y=0; y<width; y++) {
-      for (int x=0; x<width; x++) {
-        this.greyscale[x][y] = map(this.greyscale[x][y], minscale, maxscale, 0, 255);
+    float minscale = persoMin(this.zPos);
+    float maxscale = persoMax(this.zPos);
+    for (int y=0; y<lines; y++) {
+      for (int x=0; x<cols; x++) {
+        this.zPos[x][y] = map(this.zPos[x][y], minscale, maxscale, 0, maxAmp);
       }
     }
   }
 
   void display() {
-    // If visibleLayer == amplitudes.size(), all the Layers should be visible and stacked on one another
     if (visibleLayer == amplitudes.size()) {
-      for (int y=0; y<height; y++) {
-        for (int x=0; x<width; x++) {
-          stroke(this.greyscale[x][y]);
-          point(x, y);
+      for (int y=0; y<lines; y++) {
+        beginShape(TRIANGLE_STRIP);
+        for (int x=0; x<cols; x++) {
+          vertex(x*sizeCell, y*sizeCell, this.zPos[x][y]);
+          vertex(x*sizeCell, (y+1)*sizeCell, this.zPos[x][y]);
         }
+        endShape();
       }
     } else {
       this.layers.get(visibleLayer).display();
