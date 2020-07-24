@@ -21,11 +21,11 @@ class Layer {
   }
 
   void display() {
-    for (int y=0; y<lines; y++) {
+    for (int y=0; y<lines-1; y++) {
       beginShape(TRIANGLE_STRIP);
       for (int x=0; x<cols; x++) {
         vertex(x*sizeCell, y*sizeCell, this.zPos[x][y]);
-        vertex(x*sizeCell, (y+1)*sizeCell, this.zPos[x][y]);
+        vertex(x*sizeCell, (y+1)*sizeCell, this.zPos[x][y+1]);
       }
       endShape();
     }

@@ -33,22 +33,22 @@ class Terrain {
         this.zPos[x][y] = sum;
       }
     }
-    float minscale = persoMin(this.zPos);
+    /*float minscale = persoMin(this.zPos);
     float maxscale = persoMax(this.zPos);
     for (int y=0; y<lines; y++) {
       for (int x=0; x<cols; x++) {
         this.zPos[x][y] = map(this.zPos[x][y], minscale, maxscale, 0, maxAmp);
       }
-    }
+    }*/
   }
 
   void display() {
     if (visibleLayer == amplitudes.size()) {
-      for (int y=0; y<lines; y++) {
+      for (int y=0; y<lines-1; y++) {
         beginShape(TRIANGLE_STRIP);
         for (int x=0; x<cols; x++) {
           vertex(x*sizeCell, y*sizeCell, this.zPos[x][y]);
-          vertex(x*sizeCell, (y+1)*sizeCell, this.zPos[x][y]);
+          vertex(x*sizeCell, (y+1)*sizeCell, this.zPos[x][y+1]);
         }
         endShape();
       }

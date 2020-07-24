@@ -1,4 +1,6 @@
-// TODO: How can there be holes in the terrain??
+import peasy.*;
+
+PeasyCam  cam;
 
 Terrain terrain;
 int cols;
@@ -13,9 +15,11 @@ int nbrLayers;
 int terrainSize;
 int visibleLayer;
 int maxAmp;
+int maxAmpDisplay;
 
 void setup() {
   size(600, 600, P3D);
+  cam = new PeasyCam(this, 700);
   frameRate(30);
 
   sizeCell = 10;
@@ -29,6 +33,7 @@ void setup() {
 
   terrainSize = 400;
   maxAmp = 200;
+  maxAmpDisplay = 100;
   amplitudes = new FloatList();
   frequencies = new FloatList();
 
@@ -41,25 +46,25 @@ void setup() {
 }
 
 void draw() {
+  ambientLight(0, 0, 255);
+  directionalLight(255, 255, 255, 1, 0, 0);
   background(0);
-  translate(0, height/3);
-  rotateX(PI/3);
-  
+
   stroke(255);
-  noFill();
-  
+  //noFill();
+
   terrain.display();
 }
 
 void mousePressed() {
-  if (mouseButton == LEFT) {
+  if (mouseButton == RIGHT) {
     if (visibleLayer == amplitudes.size()) {
       visibleLayer = 0;
     } else {
       visibleLayer++;
     }
     println("Layer ", visibleLayer, " is visible");
-  } else if (mouseButton == RIGHT) {
+  } else if (mouseButton == CENTER) {
     println("New terrain");
     visibleLayer = 0;
     terrain.update();
